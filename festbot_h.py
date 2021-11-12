@@ -45,6 +45,9 @@ def start(update, context):
     msg += 'con /programa_reducido accedes a un listado reducido de categorías. \n'
     msg += 'con /milista podrás ver tu watch list \n'
     msg += 'con /mispendientes podrás ver las películas de tu watch list que no marcaste como vistas.\n \n'
+    msg += ' con /pelicula, /direccion y /pais seguido de una o mas palabras, pueden filtrar por películas que contengan en su '
+    msg += 'nombre, director o directora o país las palabras introducidas a continuación del comando. Por ejemplo:\n'
+    msg += '  /pelicula girl spider'
     msg += 'Recordá que podés encontrar el programa completo en https://www.mardelplatafilmfest.com/36/es/programacion \n'
     msg += 'Que lo disfrutes.'
     update.message.reply_text(msg, disable_web_page_preview = True)
@@ -348,6 +351,183 @@ def get_pends(update, context):
     except (IndexError, ValueError):
         update.message.reply_text('Hubo un error')
 
+def filter_name(update, context):
+    try:
+        user_id = update.message.from_user['id']
+        keywords = []
+        if len(context.args) < 1:
+            update.message.reply_text(text='poné una palabra al menos', 
+                  parse_mode=ParseMode.HTML)
+            return
+        for i in range(0, len(context.args)):
+            keywords.append(context.args[i])
+
+        movies_url = "http://cahbot.pythonanywhere.com/api/fest_movies/"
+        movies_req = requests.get(movies_url)
+        movies_dict = movies_req.json()
+
+        movies_list = []
+        for movie in movies_dict:
+            if all(x.lower() in unidecode.unidecode(movie['movie_name'].lower()) for x in keywords):
+                movies_list.append(movie)
+
+        if len(movies_list) > 0:
+            
+            list_url = "http://cahbot.pythonanywhere.com/api/user_wlist/" + str(user_id)
+            wlist_req = requests.get(list_url)
+            wlist = wlist_req.json()
+
+            for movie in movies_list:
+                msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
+                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
+                if movie['isOnline'] != 'No':
+                    msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                if movie['sala'] != 'No':
+                    msg += 'La podés ver en sala los días: ' + movie['sala']
+
+                in_list = False
+                if wlist_req.status_code == 200:
+                    for l in wlist:
+                        if l['movie_id'] == movie["id"]:
+                            
+                            keyboard = [
+                                [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], user_id)))]
+                            ]
+                            if l['seen'] != 'Si':
+                                keyboard[0].append(InlineKeyboardButton("Marcar como vista", callback_data=('{0},{1},{2}'.format('see',l["id"], user_id))))
+                            reply_markup = InlineKeyboardMarkup(keyboard)
+                            in_list = True
+
+                if not in_list:    
+                    keyboard = [
+                        [InlineKeyboardButton("Agregar a mi lista", callback_data=('{0},{1},{2}'.format('add',movie["id"], user_id)))]
+                    ]
+                    reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                    dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+        else:
+            dp.bot.sendMessage(chat_id = user_id,text='No se encontraron resultados', parse_mode=ParseMode.HTML)
+    except (IndexError, ValueError):
+        update.message.reply_text('Hubo un error')
+
+def filter_director(update, context):
+    try:
+        user_id = update.message.from_user['id']
+        keywords = []
+        if len(context.args) < 1:
+            update.message.reply_text(text='poné una palabra al menos', 
+                  parse_mode=ParseMode.HTML)
+            return
+        for i in range(0, len(context.args)):
+            keywords.append(context.args[i])
+
+        movies_url = "http://cahbot.pythonanywhere.com/api/fest_movies/"
+        movies_req = requests.get(movies_url)
+        movies_dict = movies_req.json()
+
+        movies_list = []
+        for movie in movies_dict:
+            if all(x.lower() in unidecode.unidecode(movie['movie_director'].lower()) for x in keywords):
+                movies_list.append(movie)
+
+        if len(movies_list) > 0:
+            
+            list_url = "http://cahbot.pythonanywhere.com/api/user_wlist/" + str(user_id)
+            wlist_req = requests.get(list_url)
+            wlist = wlist_req.json()
+
+            for movie in movies_list:
+                msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
+                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
+                if movie['isOnline'] != 'No':
+                    msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                if movie['sala'] != 'No':
+                    msg += 'La podés ver en sala los días: ' + movie['sala']
+
+                in_list = False
+                if wlist_req.status_code == 200:
+                    for l in wlist:
+                        if l['movie_id'] == movie["id"]:
+                            
+                            keyboard = [
+                                [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], user_id)))]
+                            ]
+                            if l['seen'] != 'Si':
+                                keyboard[0].append(InlineKeyboardButton("Marcar como vista", callback_data=('{0},{1},{2}'.format('see',l["id"], user_id))))
+                            reply_markup = InlineKeyboardMarkup(keyboard)
+                            in_list = True
+
+                if not in_list:    
+                    keyboard = [
+                        [InlineKeyboardButton("Agregar a mi lista", callback_data=('{0},{1},{2}'.format('add',movie["id"], user_id)))]
+                    ]
+                    reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                    dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+        else:
+            dp.bot.sendMessage(chat_id = user_id,text='No se encontraron resultados', parse_mode=ParseMode.HTML)
+    except (IndexError, ValueError):
+        update.message.reply_text('Hubo un error')
+
+def filter_country(update, context):
+    try:
+        user_id = update.message.from_user['id']
+        keywords = []
+        if len(context.args) < 1:
+            update.message.reply_text(text='poné una palabra al menos', 
+                  parse_mode=ParseMode.HTML)
+            return
+        for i in range(0, len(context.args)):
+            keywords.append(context.args[i])
+
+        movies_url = "http://cahbot.pythonanywhere.com/api/fest_movies/"
+        movies_req = requests.get(movies_url)
+        movies_dict = movies_req.json()
+
+        movies_list = []
+        for movie in movies_dict:
+            if all(x.lower() in unidecode.unidecode(movie['movie_country'].lower()) for x in keywords):
+                movies_list.append(movie)
+
+        if len(movies_list) > 0:
+            
+            list_url = "http://cahbot.pythonanywhere.com/api/user_wlist/" + str(user_id)
+            wlist_req = requests.get(list_url)
+            wlist = wlist_req.json()
+
+            for movie in movies_list:
+                msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
+                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
+                if movie['isOnline'] != 'No':
+                    msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                if movie['sala'] != 'No':
+                    msg += 'La podés ver en sala los días: ' + movie['sala']
+
+                in_list = False
+                if wlist_req.status_code == 200:
+                    for l in wlist:
+                        if l['movie_id'] == movie["id"]:
+                            
+                            keyboard = [
+                                [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], user_id)))]
+                            ]
+                            if l['seen'] != 'Si':
+                                keyboard[0].append(InlineKeyboardButton("Marcar como vista", callback_data=('{0},{1},{2}'.format('see',l["id"], user_id))))
+                            reply_markup = InlineKeyboardMarkup(keyboard)
+                            in_list = True
+
+                if not in_list:    
+                    keyboard = [
+                        [InlineKeyboardButton("Agregar a mi lista", callback_data=('{0},{1},{2}'.format('add',movie["id"], user_id)))]
+                    ]
+                    reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                    dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+        else:
+            dp.bot.sendMessage(chat_id = user_id,text='No se encontraron resultados', parse_mode=ParseMode.HTML)
+    except (IndexError, ValueError):
+        update.message.reply_text('Hubo un error')
+
 if __name__ == '__main__':
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
@@ -368,6 +548,9 @@ if __name__ == '__main__':
         dp.add_handler(CommandHandler("milista", get_list, pass_args=True, pass_chat_data=True))
         dp.add_handler(CommandHandler("programa_reducido", get_short_program, pass_args=True, pass_chat_data=True))
         dp.add_handler(CommandHandler("mispendientes", get_pends, pass_args=True, pass_chat_data=True))
+        dp.add_handler(CommandHandler("pelicula", filter_name, pass_args=True, pass_chat_data=True))
+        dp.add_handler(CommandHandler("direccion", filter_director, pass_args=True, pass_chat_data=True))
+        dp.add_handler(CommandHandler("pais", filter_country, pass_args=True, pass_chat_data=True))
         #updater.start_polling()
         #updater.idle()
         run(updater)
