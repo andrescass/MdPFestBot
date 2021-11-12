@@ -7,6 +7,7 @@ import json
 import requests
 from datetime import datetime, timedelta
 from operator import itemgetter
+import unidecode
 
 channel_id = '@MdPNoOficial'
 
