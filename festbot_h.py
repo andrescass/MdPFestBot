@@ -49,7 +49,7 @@ def start(update, context):
     msg += ' con /pelicula, /direccion y /pais seguido de una o mas palabras, pueden filtrar por películas que contengan en su '
     msg += 'nombre, director o directora o país las palabras introducidas a continuación del comando. Por ejemplo:\n'
     msg += '  /pelicula girl spider'
-    msg += 'Recordá que podés encontrar el programa completo en https://www.mardelplatafilmfest.com/36/es/programacion \n'
+    msg += 'Recordá que podés encontrar el programa completo en https://www.mardelplatafilmfest.com/36/es/programacion  \n'
     msg += 'Que lo disfrutes.'
     update.message.reply_text(msg, disable_web_page_preview = True)
     return
