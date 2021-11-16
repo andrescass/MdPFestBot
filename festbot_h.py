@@ -557,7 +557,7 @@ def filter_day(update, context):
             wlist = wlist_req.json()
             keyboard = []
             for c in comp.keys():
-                update.message.reply_text(text=c, parse_mode=ParseMode.HTML)
+                update.message.reply_text(text='-------------------\n <b>' + c + '\n-------------------</b>', parse_mode=ParseMode.HTML)
 
                 for movie in comp[c]:
                     msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
