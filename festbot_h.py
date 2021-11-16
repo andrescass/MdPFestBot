@@ -615,6 +615,7 @@ if __name__ == '__main__':
         dp.add_handler(CommandHandler("pelicula", filter_name, pass_args=True, pass_chat_data=True))
         dp.add_handler(CommandHandler("direccion", filter_director, pass_args=True, pass_chat_data=True))
         dp.add_handler(CommandHandler("pais", filter_country, pass_args=True, pass_chat_data=True))
+        dp.add_handler(CommandHandler("dia", filter_day, pass_args=True, pass_chat_data=True))
         #updater.start_polling()
         #updater.idle()
         run(updater)
