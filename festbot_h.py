@@ -48,7 +48,7 @@ def start(update, context):
     msg += 'con /mispendientes podrás ver las películas de tu watch list que no marcaste como vistas.\n \n'
     msg += ' con /pelicula, /direccion y /pais seguido de una o mas palabras, pueden filtrar por películas que contengan en su '
     msg += 'nombre, director o directora o país las palabras introducidas a continuación del comando. Por ejemplo:\n'
-    msg += '  /pelicula girl spider '
+    msg += '  /pelicula girl spider \n'
     msg += 'con /dia seguido de la fecha podés buscar las películas disponibles un día particular, por ejemplo: \n'
     msg += '/dia 19 te va a mostrar las películas disponibles el día 19, indicando si es en sala y/o online. Guarda que es un tanto intensa la respuesta \n\n'
     msg += 'Si esto te resulta de la utilidad suficiente como para que pienses en mi bienestar económico, podés invitarme un cafecito en https://cafecito.app/evil_ipa  \n\n'
