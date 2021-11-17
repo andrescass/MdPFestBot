@@ -289,8 +289,8 @@ def button(update, context) -> None:
 
             for movie in movies_dict:
                 send_movie = False
-                if movie['competition'] == param[1]:
-                    if param[0] in movie['sala'] or param[0] in movie['isOnline']:
+                if movie['competition'] == param.split(' ')[1]:
+                    if param.split(' ')[0] in movie['sala'] or param.split(' ')[0] in movie['isOnline']:
                         send_movie = True
                 
                 if send_movie:
@@ -610,8 +610,9 @@ def filter_day(update, context):
             for c in comp.keys():
                 keyboard = []
                 for c in comp.keys():
+                    s_param = keyword + ' ' + c
                     keyboard.append([
-                        InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('day',[keyword, c], update.message.from_user['id'])))
+                        InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('day',s_param, update.message.from_user['id'])))
                     ])
                     reply_markup = InlineKeyboardMarkup(keyboard)
                     
