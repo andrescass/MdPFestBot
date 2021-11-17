@@ -611,12 +611,13 @@ def filter_day(update, context):
                 keyboard = []
                 for c in comp.keys():
                     s_param = keyword + ' ' + c
+                    logger.info(s_param)
                     keyboard.append([
                         InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('day',s_param, update.message.from_user['id'])))
                     ])
                     reply_markup = InlineKeyboardMarkup(keyboard)
                     
-                update.message.reply_text(text="Como las películas son muchas, mejor verlas por categoría", parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+            update.message.reply_text(text="Como las películas son muchas, mejor verlas por categoría", parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         else:
             dp.bot.sendMessage(chat_id = user_id,text='No se encontraron resultados', parse_mode=ParseMode.HTML)
     except (IndexError, ValueError):
