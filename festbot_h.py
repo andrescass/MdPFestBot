@@ -274,6 +274,58 @@ def button(update, context) -> None:
         logger.info(r.text)
 
         query.edit_message_text(text=f"Se ha marcado como vista")
+    
+    elif action == 'day':
+        try:
+            user_id = user_id
+            list_url = "http://cahbot.pythonanywhere.com/api/user_wlist/" + str(user_id)
+            wlist_req = requests.get(list_url)
+            print(wlist_req.status_code)
+            wlist = wlist_req.json()
+
+            movies_url = "http://cahbot.pythonanywhere.com/api/fest_movies/"
+            movies_req = requests.get(movies_url)
+            movies_dict = movies_req.json()
+
+            for movie in movies_dict:
+                send_movie = False
+                if movie['competition'] == param[1]:
+                    if param[0] in movie['sala'] or param[0] in movie['isOnline']:
+                        send_movie = True
+                
+                if send_movie:
+                    msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
+                    msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
+                    if movie['isOnline'] != 'No':
+                        msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                    if movie['sala'] != 'No':
+                        msg += 'La podés ver en sala los días: ' + movie['sala']
+
+                    in_list = False
+                    if wlist_req.status_code == 200:
+                        for l in wlist:
+                            if l['movie_id'] == movie["id"]:
+                                
+                                keyboard = [
+                                    [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], user_id)))]
+                                ]
+                                if l['seen'] != 'Si':
+                                    keyboard[0].append(InlineKeyboardButton("Marcar como vista", callback_data=('{0},{1},{2}'.format('see',l["id"], user_id))))
+                                reply_markup = InlineKeyboardMarkup(keyboard)
+                                in_list = True
+
+                    if not in_list:    
+                        keyboard = [
+                            [InlineKeyboardButton("Agregar a mi lista", callback_data=('{0},{1},{2}'.format('add',movie["id"], user_id)))]
+                        ]
+                        reply_markup = InlineKeyboardMarkup(keyboard)
+                    
+                    dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+                
+            s_msg = "Para ver otra categoría te recomiendo enviar de nuevo el comando deseado"
+            dp.bot.sendMessage(chat_id = user_id,text=s_msg, parse_mode=ParseMode.HTML)
+        except (IndexError, ValueError):
+            update.message.reply_text('Hubo un error')
 
 
 
@@ -555,41 +607,15 @@ def filter_day(update, context):
                 comp[movie['competition']].append(movie)
 
         if len(comp) > 0:
-            list_url = "http://cahbot.pythonanywhere.com/api/user_wlist/" + str(user_id)
-            wlist_req = requests.get(list_url)
-            wlist = wlist_req.json()
-            keyboard = []
             for c in comp.keys():
-                update.message.reply_text(text='-------------------\n <b>' + c + '\n-------------------</b>', parse_mode=ParseMode.HTML)
-
-                for movie in comp[c]:
-                    msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                    msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
-                    if movie['isOnline'] != 'No':
-                        msg += 'La podés ver online \n'
-                    if movie['sala'] != 'No':
-                        msg += 'La podés ver en sala \n'
-
-                    in_list = False
-                    if wlist_req.status_code == 200:
-                        for l in wlist:
-                            if l['movie_id'] == movie["id"]:
-                                
-                                keyboard = [
-                                    [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], user_id)))]
-                                ]
-                                if l['seen'] != 'Si':
-                                    keyboard[0].append(InlineKeyboardButton("Marcar como vista", callback_data=('{0},{1},{2}'.format('see',l["id"], user_id))))
-                                reply_markup = InlineKeyboardMarkup(keyboard)
-                                in_list = True
-
-                    if not in_list:    
-                        keyboard = [
-                            [InlineKeyboardButton("Agregar a mi lista", callback_data=('{0},{1},{2}'.format('add',movie["id"], user_id)))]
-                        ]
-                        reply_markup = InlineKeyboardMarkup(keyboard)
+                keyboard = []
+                for c in comp.keys():
+                    keyboard.append([
+                        InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('day',[keyword, c], update.message.from_user['id'])))
+                    ])
+                    reply_markup = InlineKeyboardMarkup(keyboard)
                     
-                        dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+                update.message.reply_text(text="Como las películas son muchas, mejor verlas por categoría", parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         else:
             dp.bot.sendMessage(chat_id = user_id,text='No se encontraron resultados', parse_mode=ParseMode.HTML)
     except (IndexError, ValueError):
