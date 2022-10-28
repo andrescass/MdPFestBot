@@ -41,7 +41,7 @@ else:
 def start(update, context):
     user = update.message.from_user
     logger.info(user)
-    msg = 'Hola. Bienvenidx al bot para nada oficial del Mar del Plata Film Festival, powered by ninjaclan. \n'
+    msg = 'Hola. Bienvenidx al bot para nada oficial del Mar del Plata Film Festival 2022, powered by ninjaclan. \n'
     msg += 'con /programa accedes al listado de todas las películas. Son un montón y tal vez no todas te interesen. Porque dale, taaaan cinéfilx no es nadie. O nadie tiene taaaaanto tiempo.\n'
     msg += 'con /programa_reducido accedes a un listado reducido de categorías. \n'
     msg += 'con /milista podrás ver tu watch list \n'
@@ -50,7 +50,7 @@ def start(update, context):
     msg += 'nombre, director o directora o país las palabras introducidas a continuación del comando. Por ejemplo:\n'
     msg += '  /pelicula girl spider \n'
     msg += 'con /dia seguido de la fecha podés buscar las películas disponibles un día particular, por ejemplo: \n'
-    msg += '/dia 19 te va a mostrar las películas disponibles el día 19, indicando si es en sala y/o online. Guarda que es un tanto intensa la respuesta \n\n'
+    msg += '/dia 19 te va a mostrar las películas disponibles el día 19, indicando la sala.\n\n'
     msg += 'Si esto te resulta de la utilidad suficiente como para que pienses en mi bienestar económico, podés invitarme un cafecito en https://cafecito.app/evil_ipa  \n\n'
     msg += 'Recordá que podés encontrar el programa completo en https://www.mardelplatafilmfest.com/36/es/programacion  \n'
     msg += 'Que lo disfrutes.'
@@ -92,8 +92,8 @@ def get_program_(update, context):
             keyboard.append([
                 InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
-            msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-            msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´'
+            msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+            msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´'
 
             in_list = False
             if wlist_req.status_code == 200:
@@ -126,13 +126,13 @@ def get_program(update, context):
         ord_movielist = sorted(movies_dict, key=itemgetter('competition'))
 
         comp = {}
-        comp['Las 10 de Calo'] = []
+        #comp['Las 10 de Calo'] = []
         for movie in ord_movielist:
             if movie['competition'] not in comp.keys():
                 comp[movie['competition']] = []
             comp[movie['competition']].append(movie)
-            if movie['isCalos'] == 'Si':
-                comp['Las 10 de Calo'].append(movie)
+            #if movie['isCalos'] == 'Si':
+            #    comp['Las 10 de Calo'].append(movie)
         
         keyboard = []
         for c in comp.keys():
@@ -157,9 +157,9 @@ def get_short_program(update, context):
         cats = []
 
         comp = {}
-        comp['Las 10 de Calo'] = []
+        #comp['Las 10 de Calo'] = []
         for movie in ord_movielist:
-            if "Competencia" in movie['competition'] or "Autoras" in movie['competition'] or "Clint" in movie['competition'] or "Hora" in movie['competition'] or movie['isCalos'] == 'Si':
+            if "Competencia" in movie['competition'] or "Autoras" in movie['competition'] or "Hora" in movie['competition'] or movie['isCalos'] == 'Si' or "Trayectorias" in movie['competition'] or "VHS" in movie['competition']:
                 if movie['competition'] not in comp.keys():
                     comp[movie['competition']] = []
                 comp[movie['competition']].append(movie)
@@ -235,13 +235,13 @@ def button(update, context) -> None:
                         send_movie = True
                 
                 if send_movie:
-                    msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                    msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
-                    if movie['isOnline'] != 'No':
-                        msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                    msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                    msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
+                    #if movie['isOnline'] != 'No':
+                        #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                     if movie['sala'] != 'No':
-                        msg += 'La podés ver en sala los días: ' + movie['sala']
-
+                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+ 
                     in_list = False
                     if wlist_req.status_code == 200:
                         for l in wlist:
@@ -289,17 +289,19 @@ def button(update, context) -> None:
 
             for movie in movies_dict:
                 send_movie = False
+                dates = movie['date'].split(',')
+                days = [d.split()[0] for d in dates]
                 if movie['competition'] == param.split(';')[1]:
-                    if param.split(';')[0] in movie['sala'] or param.split(';')[0] in movie['isOnline']:
+                    if param.split(';')[0] in days:
                         send_movie = True
                 
                 if send_movie:
-                    msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                    msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
-                    if movie['isOnline'] != 'No':
-                        msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                    msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                    msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
+                    #if movie['isOnline'] != 'No':
+                        #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                     if movie['sala'] != 'No':
-                        msg += 'La podés ver en sala los días: ' + movie['sala']
+                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
 
                     in_list = False
                     if wlist_req.status_code == 200:
@@ -347,8 +349,8 @@ def get_list(update, context):
                 for movie in ord_movielist:
                     if l['movie_id'] == movie["id"]:
 
-                        msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                        msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´'
+                        msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                        msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
 
                         keyboard = [
                             [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], update.message.from_user['id'])))]
@@ -386,8 +388,8 @@ def get_pends(update, context):
                     for movie in ord_movielist:
                         if l['movie_id'] == movie["id"]:
 
-                            msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                            msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´'
+                            msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                            msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
 
                             keyboard = [
                                 [InlineKeyboardButton("Quitar de mi lista", callback_data=('{0},{1},{2}'.format('del',l["id"], update.message.from_user['id'])))]
@@ -434,12 +436,12 @@ def filter_name(update, context):
             wlist = wlist_req.json()
 
             for movie in movies_list:
-                msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
-                if movie['isOnline'] != 'No':
-                    msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
+                #if movie['isOnline'] != 'No':
+                    #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                 if movie['sala'] != 'No':
-                    msg += 'La podés ver en sala los días: ' + movie['sala']
+                    msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
 
                 in_list = False
                 if wlist_req.status_code == 200:
@@ -493,12 +495,12 @@ def filter_director(update, context):
             wlist = wlist_req.json()
 
             for movie in movies_list:
-                msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
-                if movie['isOnline'] != 'No':
-                    msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
+                #if movie['isOnline'] != 'No':
+                    #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                 if movie['sala'] != 'No':
-                    msg += 'La podés ver en sala los días: ' + movie['sala']
+                    msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
 
                 in_list = False
                 if wlist_req.status_code == 200:
@@ -552,12 +554,12 @@ def filter_country(update, context):
             wlist = wlist_req.json()
 
             for movie in movies_list:
-                msg = '<b>' + movie["movie_name"] + '</b>' + ' (' + str(movie['movie_year']) +')'+'\n'
-                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] + ' - ' + str(movie['movie_duration']) +'´\n'
-                if movie['isOnline'] != 'No':
-                    msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
+                msg = '<b>' + movie["movie_name"] + '</b>' +'\n'
+                msg += "de " + movie['movie_director'] + ' - ' + movie['movie_country'] +'´\n'
+                #if movie['isOnline'] != 'No':
+                    #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                 if movie['sala'] != 'No':
-                    msg += 'La podés ver en sala los días: ' + movie['sala']
+                    msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
 
                 in_list = False
                 if wlist_req.status_code == 200:
