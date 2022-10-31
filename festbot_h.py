@@ -142,14 +142,7 @@ def get_program(update, context):
         for movie in ord_movielist:
             if 'Argentina de Cortos - Programa 1' in movie['competition']:
                 m_comp = 'Argentina de Cortos Programa 1'
-            elif 'Argentina de Cortos - Programa 2' in movie['competition']:
-                m_comp = 'Argentina de Cortos Programa 2'
-            elif 'Latinoamericana de Cortos - Programa 1' in movie['competition']:
-                m_comp = 'Latinoamericana de Cortos Programa 1'
-            elif 'Latinoamericana de Cortos - Programa 2' in movie['competition']:
-                m_comp = 'Latinoamericana de Cortos Programa 2'
-            elif 'silente' in movie['competition']:
-                m_comp = 'Cuanto tiempo es un siglo'
+
             else:
                 m_comp = movie['competition']
             if m_comp not in comp.keys():
