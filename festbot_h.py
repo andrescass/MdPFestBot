@@ -284,7 +284,9 @@ def button(update, context) -> None:
                     #if movie['isOnline'] != 'No':
                         #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                     if movie['sala'] != 'No':
-                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+                        datehour = [f'{d.split()[1]} {d.split()[0]} a las {d.split()[-1].split(":")[0]}:{d.split()[-1].split(":")[1]}' for d in movie['date'].split(',')]
+                        datehour = ", ".join(datehour)
+                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + datehour
  
                     in_list = False
                     if wlist_req.status_code == 200:
