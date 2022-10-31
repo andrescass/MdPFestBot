@@ -17,11 +17,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # Getting mode, so we could define run function for local and Heroku setup
-mode = os.getenv("MODE")
+mode = 'dev'
 #mode = "dev"
 TOKEN = os.getenv("TOKEN")
+TOKEN = '2119936964:AAFwfyKHTV40L5lJ-2UtZrelFnauhrkRCVU'
 if mode == "dev":
-    TOKEN = "_"
     def run(updater):
         updater.start_polling()
 elif mode == "prod":
@@ -133,9 +133,11 @@ def get_program(update, context):
             comp[movie['competition']].append(movie)
             #if movie['isCalos'] == 'Si':
             #    comp['Las 10 de Calo'].append(movie)
-        
+            
         keyboard = []
         for c in comp.keys():
+            if len(c) > 34:
+                c = c[:34]
             keyboard.append([
                 InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
@@ -168,6 +170,8 @@ def get_short_program(update, context):
         
         keyboard = []
         for c in comp.keys():
+            if len(c) > 34:
+                c = c[:34]
             keyboard.append([
                 InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
