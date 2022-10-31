@@ -188,11 +188,25 @@ def get_short_program(update, context):
         #comp['Las 10 de Calo'] = []
         for movie in ord_movielist:
             if "Competencia" in movie['competition'] or "Autoras" in movie['competition'] or "Hora" in movie['competition'] or movie['isCalos'] == 'Si' or "Trayectorias" in movie['competition'] or "VHS" in movie['competition']:
-                if movie['competition'] not in comp.keys():
-                    comp[movie['competition']] = []
-                comp[movie['competition']].append(movie)
-                if movie['isCalos'] == 'Si':
-                    comp['Las 10 de Calo'].append(movie)
+                if 'Argentina de Cortos - Programa 1' in movie['competition']:
+                    m_comp = 'Argentina de Cortos'
+                elif 'Argentina de Cortos - Programa 2' in movie['competition']:
+                    m_comp = 'Argentina de Cortos'
+                elif 'Latinoamericana de Cortos - Programa 1' in movie['competition']:
+                    m_comp = 'Latinoamericana de Cortos'
+                elif 'Latinoamericana de Cortos - Programa 2' in movie['competition']:
+                    m_comp = 'Latinoamericana de Cortos'
+                elif 'silente' in movie['competition']:
+                    m_comp = 'Cuanto tiempo es un siglo'
+                elif 'Work in' in movie['competition']:
+                    m_comp = 'Competencia en Tránsito'
+                elif 'VHS' in movie['competition']:
+                    m_comp = 'Comedias Británicas'
+                else:
+                    m_comp = movie['competition']
+                if m_comp not in comp.keys():
+                    comp[m_comp] = []
+                comp[m_comp].append(movie)
         
         keyboard = []
         for c in comp.keys():
