@@ -284,9 +284,7 @@ def button(update, context) -> None:
                     #if movie['isOnline'] != 'No':
                         #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                     if movie['sala'] != 'No':
-                        datehour = [f'{d.split()[1]} {d.split()[0]} a las {d.split()[-1].split(":")[0]}:{d.split()[-1].split(":")[1]}' for d in movie['date'].split(',')]
-                        datehour = ", ".join(datehour)
-                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + datehour
+                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
  
                     in_list = False
                     if wlist_req.status_code == 200:
@@ -309,7 +307,7 @@ def button(update, context) -> None:
                     
                     dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
                 
-            s_msg = "Para ver otra categoría te recomiendo enviar de nuevo /programa o /programa_reducido"
+            s_msg = "Para ver otra categoría te recomiendo enviar de nuevo /programa o /programa_reducido\n Powered by ninjaclan"
             dp.bot.sendMessage(chat_id = user_id,text=s_msg, parse_mode=ParseMode.HTML)
         except (IndexError, ValueError):
             update.message.reply_text('Hubo un error')
@@ -370,7 +368,7 @@ def button(update, context) -> None:
                     
                     dp.bot.sendMessage(chat_id = user_id,text=msg, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
                 
-            s_msg = "Para ver otra categoría te recomiendo enviar de nuevo el comando deseado"
+            s_msg = "Para ver otra categoría te recomiendo enviar de nuevo el comando deseado\n Powered by ninjaclan"
             dp.bot.sendMessage(chat_id = user_id,text=s_msg, parse_mode=ParseMode.HTML)
         except (IndexError, ValueError):
             update.message.reply_text('Hubo un error')
