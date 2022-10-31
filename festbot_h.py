@@ -83,9 +83,21 @@ def get_program_(update, context):
 
         comp = {}
         for movie in ord_movielist:
-            if movie[competition] not in comp.keys():
-                comp[movie[competition]] = []
-            comp[movie[competition]].append(movie)
+            if 'Argentina de Cortos - Programa 1' in movie[competition]:
+                m_comp = 'Argentina de Cortos - Programa 1'
+            elif 'Argentina de Cortos - Programa 2' in movie[competition]:
+                m_comp = 'Argentina de Cortos - Programa 2'
+            elif 'Latinoamericana de Cortos - Programa 1' in movie[competition]:
+                m_comp = 'Latinoamericana de Cortos - Programa 1'
+            elif 'Latinoamericana de Cortos - Programa 2' in movie[competition]:
+                m_comp = 'Latinoamericana de Cortos - Programa 2'
+            elif 'silente' in movie[competition]:
+                m_comp = '¿Cuanto tiempo es un siglo?'
+            else:
+                m_comp = movie[competition]
+            if m_comp not in comp.keys():
+                comp[m_comp] = []
+            comp[m_comp].append(movie)
         
         keyboard = []
         for c in comp.keys():
@@ -128,16 +140,25 @@ def get_program(update, context):
         comp = {}
         #comp['Las 10 de Calo'] = []
         for movie in ord_movielist:
-            if movie['competition'] not in comp.keys():
-                comp[movie['competition']] = []
-            comp[movie['competition']].append(movie)
-            #if movie['isCalos'] == 'Si':
-            #    comp['Las 10 de Calo'].append(movie)
+            if 'Argentina de Cortos - Programa 1' in movie[competition]:
+                m_comp = 'Argentina de Cortos - Programa 1'
+            elif 'Argentina de Cortos - Programa 2' in movie[competition]:
+                m_comp = 'Argentina de Cortos - Programa 2'
+            elif 'Latinoamericana de Cortos - Programa 1' in movie[competition]:
+                m_comp = 'Latinoamericana de Cortos - Programa 1'
+            elif 'Latinoamericana de Cortos - Programa 2' in movie[competition]:
+                m_comp = 'Latinoamericana de Cortos - Programa 2'
+            elif 'silente' in movie[competition]:
+                m_comp = '¿Cuanto tiempo es un siglo?'
+            else:
+                m_comp = movie[competition]
+            if m_comp not in comp.keys():
+                comp[m_comp] = []
+            comp[m_comp].append(movie)
         print(comp.keys())
             
         keyboard = []
         for c in comp.keys():
-            c_l = c[:34]
             keyboard.append([
                 InlineKeyboardButton(c_l, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
@@ -235,7 +256,7 @@ def button(update, context) -> None:
                     if movie['isCalos'] == 'Si':
                         send_movie = True
                 else:
-                    if movie['competition'] == param:
+                    if param in movie['competition']:
                         send_movie = True
                 
                 if send_movie:
