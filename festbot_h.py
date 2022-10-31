@@ -161,6 +161,7 @@ def get_program(update, context):
             
         keyboard = []
         for c in comp.keys():
+            print(c)
             keyboard.append([
                 InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
