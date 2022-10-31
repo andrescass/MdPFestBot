@@ -159,11 +159,9 @@ def get_program(update, context):
             if m_comp not in comp.keys():
                 comp[m_comp] = []
             comp[m_comp].append(movie)
-        print(comp.keys())
             
         keyboard = []
         for c in comp.keys():
-            print(c)
             keyboard.append([
                 InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
