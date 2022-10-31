@@ -133,6 +133,7 @@ def get_program(update, context):
             comp[movie['competition']].append(movie)
             #if movie['isCalos'] == 'Si':
             #    comp['Las 10 de Calo'].append(movie)
+        print(comp.keys())
             
         keyboard = []
         for c in comp.keys():
