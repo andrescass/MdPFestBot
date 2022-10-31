@@ -136,10 +136,9 @@ def get_program(update, context):
             
         keyboard = []
         for c in comp.keys():
-            if len(c) > 34:
-                c = c[:34]
+            c_l = c[:34]
             keyboard.append([
-                InlineKeyboardButton(c, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
+                InlineKeyboardButton(c_l, callback_data=('{0},{1},{2}'.format('comp',c, update.message.from_user['id'])))
             ])
             reply_markup = InlineKeyboardMarkup(keyboard)
             
