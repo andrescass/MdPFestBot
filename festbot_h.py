@@ -282,7 +282,7 @@ def button(update, context) -> None:
                     #if movie['isOnline'] != 'No':
                         #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                     if movie['sala'] != 'No':
-                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+                        msg += 'La podés ver la sala: ' + movie['sala'] + '\nlos días: ' + movie['date']
  
                     in_list = False
                     if wlist_req.status_code == 200:
@@ -343,7 +343,7 @@ def button(update, context) -> None:
                     #if movie['isOnline'] != 'No':
                         #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                     if movie['sala'] != 'No':
-                        msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+                        msg += 'La podés ver la sala: ' + movie['sala'] + '\nlos días: ' + movie['date']
 
                     in_list = False
                     if wlist_req.status_code == 200:
@@ -483,7 +483,7 @@ def filter_name(update, context):
                 #if movie['isOnline'] != 'No':
                     #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                 if movie['sala'] != 'No':
-                    msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+                    msg += 'La podés ver la sala: ' + movie['sala'] + '\nlos días: ' + movie['date']
 
                 in_list = False
                 if wlist_req.status_code == 200:
@@ -542,7 +542,7 @@ def filter_director(update, context):
                 #if movie['isOnline'] != 'No':
                     #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                 if movie['sala'] != 'No':
-                    msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+                    msg += 'La podés ver la sala: ' + movie['sala'] + '\nlos días: ' + movie['date']
 
                 in_list = False
                 if wlist_req.status_code == 200:
@@ -601,7 +601,7 @@ def filter_country(update, context):
                 #if movie['isOnline'] != 'No':
                     #msg += 'La podés ver online los días: ' + movie['isOnline'] + '\n'
                 if movie['sala'] != 'No':
-                    msg += 'La podés ver la sala: ' + movie['sala'] + 'los días: ' + movie['date']
+                    msg += 'La podés ver la sala: ' + movie['sala'] + '\nlos días: ' + movie['date']
 
                 in_list = False
                 if wlist_req.status_code == 200:
