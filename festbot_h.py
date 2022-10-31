@@ -150,6 +150,8 @@ def get_program(update, context):
                 m_comp = 'Latinoamericana de Cortos'
             elif 'silente' in movie['competition']:
                 m_comp = 'Cuanto tiempo es un siglo'
+            elif 'Work in' in movie['competition']:
+                m_comp = 'Competencia en Tránsito'
             else:
                 m_comp = movie['competition']
             if m_comp not in comp.keys():
